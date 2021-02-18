@@ -1,9 +1,9 @@
 # TOSCA workflow <img src="" width="200" align="right" />
-![snakemake-run](https://github.com/mdelcorvo/TOSCA/workflows/snakemake-run/badge.svg)
+
 
 **TOSCA** (**T**umor **O**nly **S**omatic **CA**lling) is a [Snakemake workflow](https://snakemake.readthedocs.io/en/stable/index.html), aimed at performing a somatic variant calling (without matched normal samples) workflow in a reproducible, automated, and partially contained manner. It is implemented such that alternative or similar analysis can be added or removed. 
 
-TOSCA consists of a `Snakefile`, a [`conda`](https://conda.io/docs/) environment file (`envs/environment.yaml`) a configuration file (`config.yaml`) and a set of `R` scripts, to perform quality control, preprocessing and variant calling analysis of Whole exome and Target sequencing.  
+TOSCA consists of a `Snakefile`, a [`conda`](https://conda.io/docs/) environment file (`envs/environment.yaml`) a configuration file (`config.yaml`) and a set of `R` scripts, to perform quality control, preprocessing, variant calling, functional annotation and databases filtering of whole exome / target sequencing.  
 
 By default, the pipeline performs all the steps shown in the [diagram](img/dag_nice3.png) below. However, you can turn off any combination of the light-colored steps in the `config.yaml` file. 
 
