@@ -1,4 +1,4 @@
-# TOSCA workflow <img src="" width="200" align="right" />
+# TOSCA workflow
 
 
 **TOSCA** (**T**umor **O**nly **S**omatic **CA**lling) is a [Snakemake workflow](https://snakemake.readthedocs.io/en/stable/index.html), aimed at performing a somatic variant calling (without matched normal samples) workflow in a reproducible, automated, and partially contained manner. It is implemented such that alternative or similar analysis can be added or removed. 
