@@ -12,10 +12,11 @@ By default, the pipeline performs all the steps shown in the [diagram](img/dag_n
 
 ## Using the TOSCA workflow
 
-Assuming that snakemake and conda are installed (and your system has the necessary libraries to compile R packages), you can use the following commands on a test dataset:
+Assuming that conda is installed (and your system has the necessary libraries to compile R packages), you can use the following commands on a test dataset:
 
 ```
 git clone https://github.com/mdelcorvo/TOSCA.git
+conda install -c conda-forge -c bioconda snakemake=6.8.0 snakemake-wrapper-utils mamba
 cd TOSCA && snakemake --use-conda
 ```
 
