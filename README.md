@@ -12,7 +12,7 @@ By default, the pipeline performs only mandatory steps shown in the [diagram](im
 
 ## Using the TOSCA workflow
 
-Assuming that conda is installed (and your system has the necessary libraries to compile R packages), you can use the following commands on a test dataset:
+We assume that you already have conda and Snakemake installed, otherwise you can easily install them with the following commands:
 
 ```
 git clone https://github.com/mdelcorvo/TOSCA.git
