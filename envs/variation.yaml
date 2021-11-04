@@ -1,0 +1,7 @@
+channels:
+  - bioconda
+  - conda-forge
+dependencies:
+  - rust-bio-tools
+  - bcftools=1.13
+  - parallel

@@ -1,0 +1,15 @@
+channels:
+  - bioconda
+  - conda-forge
+dependencies:
+  - r-base =4.1.1
+  - r-data.table
+  - r-biocmanager
+  - bioconductor-genomicranges
+  - bioconductor-purecn= 1.22.1
+  - ucsc-bigwigtobedgraph
+  - ucsc-bedgraphtobigwig
+  - pyfaidx
+  - tabix
+  - perl-vcftools-vcf
+  - java-jdk
