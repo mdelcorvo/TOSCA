@@ -1,13 +1,13 @@
 # TOSCA workflow <img src="img/tosca_image.png" width="200" align="right" />
 
 
-**TOSCA** (**T**umor **O**nly **S**omatic **CA**lling) is a [Snakemake workflow](https://snakemake.readthedocs.io/en/stable/index.html), aimed at performing a somatic variant calling (without matched normal samples) workflow in a reproducible, automated, and partially contained manner.
+**TOSCA** (**T**umor **O**nly **S**omatic **CA**lling) is a [Snakemake workflow](https://snakemake.readthedocs.io/en/stable/index.html), aimed at performing a somatic variant calling (without matched normal samples) analysis in a reproducible, automated, and open source workflow.
 
-TOSCA consists of a `Snakefile`, a [`conda`](https://conda.io/docs/) environment file (`envs/environment.yaml`) a configuration file (`config.yaml`) and a set of `R` scripts, to perform quality control, preprocessing, variant calling, functional annotation and databases filtering of whole exome / target sequencing.  
+TOSCA consists of a `Snakefile`, a set of [`conda`](https://conda.io/docs/) environment files (`envs/*.yaml`) a configuration file (`config/config.yaml`) and a set of `R` scripts. It is able to perform an end-to-end analysis, from raw read files, via quality checks, alignment and variant calling, to functional annotation, databases filtering, tumor purity and ploidy estimation and finally variant classification in whole exome / target sequencing data.  
 
-By default, the pipeline performs all the steps shown in the [diagram](img/dag_nice3.png) below. However, you can turn off any combination of the light-colored steps in the `config.yaml` file. 
+By default, the pipeline performs only mandatory steps shown in the [diagram](img/dag_nice3.png) below. However, you can turn on optional rules in the `config/config.yaml` file. 
 
-*Advanced use*: If you prefer other software to run one of the outlined steps (e.g. `DESeq2` over `edgeR`, or `kallisto` over `Salmon`), you can use the software of your preference provided you have your own script(s), and change some lines within the `Snakefile`. If you think your "custom rule" might be of use to a broader audience, let us know by opening an issue.
+*Advanced use*: If you wish to custom your analysis by adding or removing some steps (e.g. VarScan over Mutect2 or Bowtie2 over BWA), you can use the software of your preference provided you have your own script(s), and change some lines within the `Snakefile`. If you think your "custom rule" might be of interest to a broader audience, let us know by opening an issue.
 
 
 ## Using the TOSCA workflow
