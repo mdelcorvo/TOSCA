@@ -5,7 +5,7 @@
 
 TOSCA consists of a `Snakefile`, a set of [`conda`](https://conda.io/docs/) environment files (`envs/*.yaml`) a configuration file (`config/config.yaml`) and a set of `R` scripts. It is able to perform an end-to-end analysis, from raw read files, via quality checks, alignment and variant calling, to functional annotation, databases filtering, tumor purity and ploidy estimation and finally variant classification in whole exome / target sequencing data.  
 
-By default, the pipeline performs only mandatory steps shown in the [diagram](img/dag_nice3.png) below. However, you can turn on optional rules in the `config/config.yaml` file. 
+By default, the pipeline performs only mandatory steps shown in the [diagram](img/dag_tosca.png) below. However, you can turn on optional rules in the `config/config.yaml` file. 
 
 *Advanced use*: If you wish to custom your analysis by adding or removing some steps (e.g. VarScan over Mutect2 or Bowtie2 over BWA), you can use the software of your preference provided you have your own script(s), and change some lines within the `Snakefile`. If you think your "custom rule" might be of interest to a broader audience, let us know by opening an issue.
 
