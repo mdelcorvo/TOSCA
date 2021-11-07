@@ -21,6 +21,7 @@ To install Snakemake via conda: conda install -c conda-forge -c bioconda snakema
 To use TOSCA:
 
 git clone https://github.com/mdelcorvo/TOSCA.git
+#edit config and meta file
 cd TOSCA && snakemake --use-conda --configfile config/config.yaml
 ```
 
