@@ -25,7 +25,7 @@ git clone https://github.com/mdelcorvo/TOSCA.git
 cd TOSCA && snakemake --use-conda --configfile config/config.yaml
 ```
 
-To use the TOSCA workflow on your own data, follow the steps outlined in the [wiki](https://github.com/mdelcorvo/TOSCA/wiki).
+Moer details about TOSCA workflow can be found in the [wiki](https://github.com/mdelcorvo/TOSCA/wiki).
 
 
 ## Contributors
