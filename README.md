@@ -14,9 +14,9 @@ By default, the pipeline performs only mandatory steps shown in the [diagram](im
 
 We assume that you already have conda and Snakemake installed, otherwise you can easily install them with the following commands:
 
-conda: https://docs.conda.io/projects/conda/en/latest/user-guide/install/linux.html
+To install conda: https://docs.conda.io/projects/conda/en/latest/user-guide/install/linux.html
 
-Snakemake: conda install -c conda-forge -c bioconda snakemake=6.8.0 snakemake-wrapper-utils mamba
+To install Snakemake via conda: conda install -c conda-forge -c bioconda snakemake=6.8.0 snakemake-wrapper-utils mamba
 ```
 To use TOSCA:
 
