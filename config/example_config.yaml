@@ -3,9 +3,9 @@
 ############################################
 
 ## Path to meta-file with RAW TUMOR samples (following columns are required: sample, platform, fq1/fq2 (tab separated))
-meta: /data/SP/home/ieo5398/TOSCA/metafile/panelT/targetT_28-10.txt
+meta: metafile/target_panel/example_metafile.txt
 ## Path to the OUTPUT directory            
-output: /scratch/SP/LinfochipT/2021/28-10
+output: /scratch/example_results
 
 ############################################
 ## OPTIONAL (HIGHLY recommended for WES)
@@ -17,13 +17,13 @@ output: /scratch/SP/LinfochipT/2021/28-10
 ## These NORMAL samples ARE NOT required to be PATIENT-matched to the tumor samples, but they need to be PROCESSED-matched (same assay run through the same alignment pipeline, ideally sequenced in the same lab)
 
 ## Path to meta-file with RAW NORMAL samples (following columns are required: id, platform, fq1/fq2 (tab separated))
-meta_N: /data/SP/home/ieo5398/TOSCA/metafile/panelT/targetT_N_nuove-sonde.txt # <<< Uncomment this line to ACTIVATE NORMAL step!
+#meta_N: metafile/target_panel/example_Normal_metafile.txt # <<< Uncomment this line to ACTIVATE NORMAL step!
 ## Path to Normal OUTPUT directory
-normDB: /scratch/SP/LinfochipT/2021/Tpanel_nuove_sonde
+normDB: /scratch/normDB_example_results
 
 ## PureCN parameters (only if you provided meta-file of RAW NORMAL samples and activate PureCN step)
 kmer: 100 #kmer size for mappability file (76 or 100)
-baits: /scratch/SP/LinfochipT/Target_file/hg38/LINFOCHIPT2_Hg38_capture_targets.bed
+baits: /scratch/Hg38_capture_targets.bed
 mappability:
   GRCh38: "https://s3.amazonaws.com/purecn/GCA_000001405.15_GRCh38_no_alt_analysis_set"
   GRCh37: "https://hgdownload.cse.ucsc.edu/goldenPath/hg19/encodeDCC/wgEncodeMapability/wgEncodeCrgMapabilityAlign"
@@ -33,7 +33,7 @@ mappability:
 ############################################
 
 ## Number of cores
-ncores: 14
+ncores: 1
 
 ## Genome reference
 ref:
@@ -49,9 +49,9 @@ ref:
 ## Quality and target filtering
 filtering:
 ## Provide BED file if you have TARGET sequencing
-  restrict-regions: /scratch/SP/LinfochipT/Target_file/hg38/LINFOCHIPT2_Hg38_primary_targets.bed
+  restrict-regions: /scratch/Hg38_primary_targets.bed
 ## Minimum read depth to call a variant (100-250x suggested)   
-  min_depth: 100
+  min_depth: 250
 ## Minimum variant allele frequency (5% suggested)  
   vaf: 0.05 
 ##
