@@ -6,7 +6,7 @@ dependencies:
   - r-data.table
   - r-biocmanager
   - bioconductor-genomicranges
-  - bioconductor-purecn= 1.22.1
+  - bioconductor-purecn= 2.0.1
   - ucsc-bigwigtobedgraph
   - ucsc-bedgraphtobigwig
   - pyfaidx
