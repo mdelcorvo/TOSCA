@@ -70,6 +70,8 @@ rule purecn:
     params:
         ref='hg38' if config["ref"]["build"]=='GRCh38' else 'hg19',
         sample = "{sample}"
+    conda:
+        "../envs/r4.yaml"
     output:
         result_rds= outputdir + "PureCN/{sample}.rds",
         ps= outputdir + "PureCN/{sample}.predictSomatic.txt",
