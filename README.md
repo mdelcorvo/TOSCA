@@ -30,7 +30,8 @@ More details about TOSCA workflow can be found in the [wiki](https://github.com/
 ## Workflow graph
 ![DAG](img/dag_tosca.png) 
 
-Simplified directed acyclic graph (DAG) of the TOSCA workflow. Oval shapes are referred to data (input and intermediate files) while rectangles to processes. Raw input/output files are depicted as green while files independently downloaded by TOSCA are depicted as orange ovals. Red blocks are mandatory rules, while dashed lines and blue blocks are optional rules, controlled in the `config.yaml`. By default only mandatory rules are executed.
+Simplified directed acyclic graph (DAG) of the TOSCA workflow. 
+Oval shapes are referred to data (input/output and intermediate files) while rectangles to processes. Input and output files are depicted as green while files independently downloaded by TOSCA are depicted as orange ovals. Red blocks are mandatory rules, while dashed lines and blue blocks are optional rules, controlled in the `config.yaml`. By default only mandatory rules are executed.
 
 ## Contributors
 Current contributors include:
