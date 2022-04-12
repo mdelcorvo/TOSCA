@@ -1,7 +1,7 @@
 rule snpeff:
     input:
         expand("resources/database/snpEff/{snpeff_dir}",snpeff_dir=config["ref"]["snpeff_db"]),
-        vcf=outputdir + "variant/{sample}.vcf"
+        vcf=outputdir + "variant/{sample}.filt.vcf"
     output:
         call=outputdir + "annotation/{sample}.snpEff.vcf",
         csv=outputdir + "qc/snpeff/{sample}.snpEff.csv",
@@ -18,7 +18,7 @@ rule snpeff:
         
 rule snpsift_annotate_1000G:
     input:
-        call=outputdir + "variant/{sample}.vcf",
+        call=outputdir + "variant/{sample}.filt.vcf",
         database=expand("resources/database/{ref}/1000G-phase_3.vcf.gz",ref=config["ref"]["build"]),
         tabix=expand("resources/database/{ref}/1000G-phase_3.vcf.gz.tbi",ref=config["ref"]["build"])
     output:
@@ -32,7 +32,7 @@ rule snpsift_annotate_1000G:
 
 rule snpsift_annotate_ESP:
     input:
-        call=outputdir + "variant/{sample}.vcf",
+        call=outputdir + "variant/{sample}.filt.vcf",
         database=expand("resources/database/{ref}/ESP6500SI.vcf.gz",ref=config["ref"]["build"]),
         tabix=expand("resources/database/{ref}/ESP6500SI.vcf.gz.tbi",ref=config["ref"]["build"])
     output:
@@ -46,7 +46,7 @@ rule snpsift_annotate_ESP:
 
 rule snpsift_annotate_ExAC:
     input:
-        call=outputdir + "variant/{sample}.vcf",
+        call=outputdir + "variant/{sample}.filt.vcf",
         database=config["database_url"]["GRCh38"]["germline"]["ExAC"]
     output:
         call=outputdir + "annotation/{sample}.ExAC.vcf"
@@ -59,7 +59,7 @@ rule snpsift_annotate_ExAC:
 
 rule snpsift_annotate_dbSNP:
     input:
-        call=outputdir + "variant/{sample}.vcf",
+        call=outputdir + "variant/{sample}.filt.vcf",
         database=expand("resources/database/{ref}/variation.noiupac.vcf.gz",ref=config["ref"]["build"])
     output:
         call=outputdir + "annotation/{sample}.dbSNP.vcf"
@@ -72,7 +72,7 @@ rule snpsift_annotate_dbSNP:
 
 rule Cosmic_annotate:
     input:
-        call=outputdir + "variant/{sample}.vcf",
+        call=outputdir + "variant/{sample}.filt.vcf",
         database=expand("resources/database/{ref}/COSMIC.vcf.gz",ref=config["ref"]["build"]),
         tabix=expand("resources/database/{ref}/COSMIC.vcf.gz.tbi",ref=config["ref"]["build"]),
         script = "scripts/COSMIC.R"
@@ -87,7 +87,7 @@ rule Cosmic_annotate:
 
 rule snpsift_annotate_ClinVar:
     input:
-        call=outputdir + "variant/{sample}.vcf",
+        call=outputdir + "variant/{sample}.filt.vcf",
         database=expand("resources/database/{ref}/ClinVar.vcf.gz",ref=config["ref"]["build"])
     output:
         call=outputdir + "annotation/{sample}.ClinVar.vcf"
@@ -100,7 +100,7 @@ rule snpsift_annotate_ClinVar:
 
 rule vcf_coverage:
     input:
-         call=outputdir + "variant/{sample}.vcf",
+         call=outputdir + "variant/{sample}.filt.vcf",
          bam=outputdir + "recal/{sample}.bam"
     params:
          config["bamstats"]     
@@ -111,7 +111,7 @@ rule vcf_coverage:
         
 rule annotation_assembler:
     input:
-        vcf = outputdir + "variant/{sample}.vcf",
+        vcf = outputdir + "variant/{sample}.filt.vcf",
         snpeff=outputdir + "annotation/{sample}.snpEff.vcf",
         gen1k=outputdir + "annotation/{sample}.1000G.vcf",
         esp=outputdir + "annotation/{sample}.ESP.vcf",

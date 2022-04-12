@@ -29,7 +29,12 @@ rule mutect2:
         exac= config["database_url"]["GRCh38"]["germline"]["ExAC"] if config["ref"]["build"]=='GRCh38' else config["database_url"]["GRCh37"]["germline"]["ExAC"],
         bed=outputdir + "qc/coverage-stats/{sample}.final.bed"
     output:       
-        vcf_raw = outputdir + "variant/{sample}.vcf",
+        vcf_raw = temp(outputdir + "variant/{sample}.vcf"),
+        vcf_filt = outputdir + "variant/{sample}.filt.vcf",
+        f1r2= outputdir + "variant/{sample}.f1r2.tar.gz",
+        rom= outputdir + "variant/{sample}.read-orientation-model.tar.gz",
+        getpileupsum= outputdir + "variant/{sample}.getpileupsummaries.table",
+        contamination= outputdir + "variant/{sample}.contamination.table",
         af_table= outputdir + "annotation/{sample}.af.table"
     message:
         "Implementing Mutect2"
@@ -40,5 +45,9 @@ rule mutect2:
     conda:
         "../envs/gatk4.yaml"    
     shell:
-        "gatk Mutect2 -R {input.ref} -I {input.bam} --germline-resource {input.exac} --panel-of-normals {input.pon} -L {input.bed} -O {output.vcf_raw}; "
-        "gatk VariantsToTable -V {output.vcf_raw} -F CHROM -F POS -F TYPE -GF AF --show-filtered true -O {output.af_table}"
+        "gatk Mutect2 -R {input.ref} -I {input.bam} --germline-resource {input.exac} --panel-of-normals {input.pon} -L {input.bed} --f1r2-tar-gz {output.f1r2} -O {output.vcf_raw};"
+        "gatk LearnReadOrientationModel -I {output.f1r2} -O {output.rom};"
+        "gatk GetPileupSummaries -I {input.bam} -V {input.exac} -L {input.bed} -O {output.getpileupsum};"
+        "gatk CalculateContamination -I {output.getpileupsum} -O {output.contamination};"
+        "gatk FilterMutectCalls -R {input.ref} --contamination-table {output.contamination} --ob-priors {output.rom} -V {output.vcf_raw} -O {output.vcf_filt};"
+        "gatk VariantsToTable -V {output.vcf_raw} -F CHROM -F POS -F TYPE -GF AF --show-filtered true -O {output.af_table};"
