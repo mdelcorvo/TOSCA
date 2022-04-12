@@ -19,7 +19,7 @@ if (!grepl('list',list1_ps)) {
 	for (i in l1$V1) {
 		tmp<-fread(i)
 		tmp$Sample<-gsub('.txt','',i)
-		tmp<-tmp[,c(24,1:23)]
+		tmp<-tmp[,c('Sample','Gene','Ensembl_id','Type','CHROM','POS','REF','ALT','refGenome','Prediction','Contamination','exon_rank','AF','Depth','Effect','dbSNP','ESP','ExAC','1000Genome','COSMIC','ClinVarDisease_name','ClinVarClinical_significance','Main_impact','DNA_type','Protein_type')]
 		res<-rbind(res,tmp)
 	}
 fwrite(res,outputfile, row.names=F, col.names=T,quote=F, sep='\t')
@@ -37,7 +37,8 @@ fwrite(res,outputfile, row.names=F, col.names=T,quote=F, sep='\t')
 		tmp1$id<-paste(tmp1$chr,tmp1$start,sep='_')
 		tmp2<-merge(tmp,tmp1[,c(26,27,53)],by.x='id',by.y='id',all.x=T)
 		tmp3<-tmp2[,c(25,2:5,26,27,6:24)]
-		colnames(tmp3)[6:7]<-c('PureCN_Prediction','PureCN_posterior probability')
+		tmp3<-tmp2[,c('Sample','Gene','Ensembl_id','Type','CHROM','POS','REF','ALT','refGenome','Prediction','ML.SOMATIC','POSTERIOR.SOMATIC','Contamination','exon_rank','AF','Depth','Effect','dbSNP','ESP','ExAC','1000Genome','COSMIC','ClinVarDisease_name','ClinVarClinical_significance','Main_impact','DNA_type','Protein_type')]
+		colnames(tmp3)[11:12]<-c('PureCN_Prediction','PureCN Posterior Probability')
 		tmp3$PureCN_Prediction<-ifelse(is.na(tmp3$PureCN_Prediction),'germline',ifelse(tmp3$PureCN_Prediction==FALSE,'germline','somatic'))
 		res<-rbind(res,tmp3)
 	}

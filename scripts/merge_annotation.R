@@ -130,6 +130,7 @@ res$Prediction<- ifelse(res$AF < vaf | res$Depth < depth, 'germline', #Step 1.1
 							ifelse(grepl('Benign|Likely_benign',res$ClinVarClinical_significance),'germline','somatic')))) #Step 3
 
 #######################
+res$Contamination<-raw_res$FILTER
 res$refGenome<-ref
 res <- res[with(res, order(res$CHROM, res$POS)), ]
 
@@ -143,9 +144,8 @@ exon <- GRanges(gtf$chrom, ranges =IRanges(gtf$start,gtf$end))
 tmp<-GRanges(res$CHROM, ranges =IRanges(res$POS,res$POS))
 exon_match = findOverlaps(query = exon, subject = tmp)
 res[subjectHits(exon_match),]$exon_rank<- gtf[queryHits(exon_match),]$exon_rank
-
-res<-res[,c(12:13,17,26:28,1:4,18,16,11,19:22,23,24:25,10,14:15)]
-colnames(res)[17]<-'1000 Genome'
+res<-res[,c('Gene','Ensembl_id','Type','CHROM','POS','REF','ALT','refGenome','Prediction','Contamination','exon_rank','AF','Depth','Effect','dbSNP','ESP','ExAC','Genome1k','COSMIC','ClinVarDisease_name','ClinVarClinical_significance','Main_impact','DNA_type','Protein_type')]
+colnames(res)[18]<-'1000Genome'
 
 res<-res[order(res$Prediction,decreasing = T),]
 fwrite(res,outputfile, row.names=F, col.names=T,quote=F, sep='\t')
