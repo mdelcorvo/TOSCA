@@ -16,7 +16,7 @@ We assume that you already have conda and Snakemake installed, otherwise you can
 
 To install conda: https://docs.conda.io/projects/conda/en/latest/user-guide/install/linux.html
 
-To install Snakemake via conda: conda install -c conda-forge -c bioconda snakemake=6.10.0 snakemake-wrapper-utils mamba
+To install Snakemake via conda: conda install -c conda-forge -c bioconda snakemake snakemake-wrapper-utils mamba
 ```
 To use TOSCA:
 
