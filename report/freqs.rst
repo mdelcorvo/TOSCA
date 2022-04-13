@@ -1,1 +1,0 @@
-Per variant per sample allele frequency, i.e., :math:`m / n` where :math:`m` is the number of reads supporting the variant allele and :math:`n` is the total number of reads over the variant allele in that sample.
