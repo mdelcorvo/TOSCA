@@ -38,7 +38,7 @@ Current contributors include:
 
 - [Marcello Del Corvo](https://github.com/mdelcorvo)
 
-##Paper
+## Paper
 - Main paper describing the tool:
 
 Marcello Del Corvo, Saveria Mazzara, Stefano A Pileri, TOSCA: an automated Tumor Only Somatic CAlling workflow for somatic mutation detection without matched normal samples, Bioinformatics Advances, Volume 2, Issue 1, 2022, vbac070, https://doi.org/10.1093/bioadv/vbac070
