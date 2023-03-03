@@ -1,8 +1,9 @@
 rule callable:
     input:
-         ref=expand("resources/reference_genome/{ref}/{species}.fasta",ref=config["ref"]["build"],species=config["ref"]["species"]),
-         bam=outputdir + "recal/{sample}.bam",
+         ref=get_reference,
+         bam=outputdir + "dedup/{sample}.bam",
          bed=config["filtering"]["restrict-regions"],
+         dict=expand("resources/reference_genome/{ref}/homo_sapiens.dict",ref=config["ref"]["build"]),
          script = "scripts/callable_filt.R"
     output:
          out_bed=outputdir + "qc/coverage-stats/{sample}.bed",
@@ -23,8 +24,8 @@ rule callable:
         
 rule mutect2:
     input:
-        ref=expand("resources/reference_genome/{ref}/{species}.fasta",ref=config["ref"]["build"],species=config["ref"]["species"]),
-        bam = outputdir + "recal/{sample}.bam",
+        ref=get_reference,
+        bam = outputdir + "dedup/{sample}.bam",
         pon= config["database_url"]["GRCh38"]["germline"]["PON"] if config["ref"]["build"]=='GRCh38' else config["database_url"]["GRCh37"]["germline"]["PON"],
         exac= config["database_url"]["GRCh38"]["germline"]["ExAC"] if config["ref"]["build"]=='GRCh38' else config["database_url"]["GRCh37"]["germline"]["ExAC"],
         bed=outputdir + "qc/coverage-stats/{sample}.final.bed"

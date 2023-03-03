@@ -1,32 +1,31 @@
 rule get_genome:
     output:
-        expand("resources/reference_genome/{ref}/{species}.fasta",ref=config["ref"]["build"],species=config["ref"]["species"])
+        expand("resources/reference_genome/{ref}/homo_sapiens.fasta",ref=config["ref"]["build"])
     params:
-        species=config["ref"]["species"],
+        species="homo_sapiens",
         datatype="dna",
         build=config["ref"]["build"],
         release=config["ref"]["release"]
     log:
         outputdir + "logs/ensembl/get_genome.log"    
-    cache: True
+    cache: "omit-software"
     wrapper:
-        "0.78.0/bio/reference/ensembl-sequence"
+        "v1.23.3/bio/reference/ensembl-sequence"
 
 rule get_annotation:
     output:
-        expand("resources/reference_genome/{ref}/{species}_annotation.gtf",ref=config["ref"]["build"],species=config["ref"]["species"])
+       expand("resources/reference_genome/{ref}/homo_sapiens.gtf",ref=config["ref"]["build"])
     params:
-        species=config["ref"]["species"],
+        species="homo_sapiens",
         release=config["ref"]["release"] if config["ref"]["release"]=='GRCh38' else 87,
-        build=config["ref"]["build"],
-        fmt="gtf"
-    cache: True  # save space and time with between workflow caching (see docs)
+        build=config["ref"]["build"]
+    cache: "omit-software" 
     wrapper:
-        "0.78.0/bio/reference/ensembl-annotation"
+        "v1.23.3/bio/reference/ensembl-annotation"
 
 rule gtf:
     input:
-        gtf=expand("resources/reference_genome/{ref}/{species}_annotation.gtf",ref=config["ref"]["build"],species=config["ref"]["species"]),
+        gtf=expand("resources/reference_genome/{ref}/homo_sapiens.gtf",ref=config["ref"]["build"]),
         script = "scripts/exon_ranking.R"
     params:
         build=config["ref"]["build"]    
@@ -39,76 +38,59 @@ rule gtf:
 
 rule genome_dict:
     input:
-         expand("resources/reference_genome/{ref}/{species}.fasta",ref=config["ref"]["build"],species=config["ref"]["species"])
+         get_reference
     output:
-         expand("resources/reference_genome/{ref}/{species}.dict",ref=config["ref"]["build"],species=config["ref"]["species"])
+         expand("resources/reference_genome/{ref}/homo_sapiens.dict",ref=config["ref"]["build"])
     conda:
         "../envs/samtools.yaml"     
-    cache: True
     shell:
         "samtools dict {input} > {output} "
         
 rule bwa_index:
     input:
-        expand("resources/reference_genome/{ref}/{species}.fasta",ref=config["ref"]["build"],species=config["ref"]["species"])
+        get_reference
     output:
-        expand("resources/reference_genome/{ref}/{species}.fasta.{bwa}",ref=config["ref"]["build"],species=config["ref"]["species"],bwa=["amb", "ann" ,"bwt", "pac", "sa"])
+        idx=expand("resources/reference_genome/{ref}/homo_sapiens.fasta.{bwa}",ref=config["ref"]["build"],bwa=["amb", "ann" ,"bwt", "pac", "sa"])
     params:
         algorithm="bwtsw"
     log:
         outputdir + "logs/bwa_index/bwa_index.log"          
-    resources:
-        mem_mb=369000
-    cache: True
     wrapper:
-        "0.78.0/bio/bwa/index"        
+        "v1.23.3/bio/bwa/index"        
 
 rule genome_faidx:
     input:
-         expand("resources/reference_genome/{ref}/{species}.fasta",ref=config["ref"]["build"],species=config["ref"]["species"]),
-         expand("resources/reference_genome/{ref}/{species}.fasta.{bwa}",ref=config["ref"]["build"],species=config["ref"]["species"],bwa=["amb", "ann" ,"bwt", "pac", "sa"])
+         get_reference,
+         expand("resources/reference_genome/{ref}/homo_sapiens.fasta.{bwa}",ref=config["ref"]["build"],bwa=["amb", "ann" ,"bwt", "pac", "sa"])
     output:
-         expand("resources/reference_genome/{ref}/{species}.fasta.fai",ref=config["ref"]["build"],species=config["ref"]["species"])
-    cache: True
+         expand("resources/reference_genome/{ref}/homo_sapiens.fasta.fai",ref=config["ref"]["build"])
     wrapper:
-        "0.78.0/bio/samtools/faidx"
+        "v1.23.3/bio/samtools/faidx"
 
 rule get_known_variation:
     input:
         # use fai to annotate contig lengths for GATK BQSR
-        fai=expand("resources/reference_genome/{ref}/{species}.fasta.fai",ref=config["ref"]["build"],species=config["ref"]["species"])
+        fai=expand("resources/reference_genome/{ref}/homo_sapiens.fasta.fai",ref=config["ref"]["build"])
     output:
-        vcf=temp(expand("resources/database/{ref}/variation.vcf.gz",ref=config["ref"]["build"]))
+        vcf=expand("resources/database/{ref}/variation.vcf.gz",ref=config["ref"]["build"])
     params:
-        species=config["ref"]["species"],
+        species="homo_sapiens",
         build=config["ref"]["build"],
         release=config["ref"]["release"],
         type="all"
-    cache: True
+    cache: "omit-software"  # save space and time with between workflow caching (see docs)
     wrapper:
-        "0.78.0/bio/reference/ensembl-variation"
-
-rule remove_iupac_codes:
-    input:
-        expand("resources/database/{ref}/variation.vcf.gz",ref=config["ref"]["build"])
-    output:
-        expand("resources/database/{ref}/variation.noiupac.vcf.gz",ref=config["ref"]["build"])
-    conda:
-        "../envs/rbt.yaml"
-    cache: True
-    shell:
-        "rbt vcf-fix-iupac-alleles < {input} | bcftools view -Oz > {output}"
+        "v1.23.3/bio/reference/ensembl-variation"
               
 rule tabix_known_variants:
     input:
-        expand("resources/database/{ref}/variation.noiupac.vcf.gz",ref=config["ref"]["build"])
+        expand("resources/database/{ref}/variation.vcf.gz",ref=config["ref"]["build"])
     output:
-        expand("resources/database/{ref}/variation.noiupac.vcf.gz.tbi",ref=config["ref"]["build"])
+        expand("resources/database/{ref}/variation.vcf.gz.tbi",ref=config["ref"]["build"])
     params:
         "-p vcf"
-    cache: True
     wrapper:
-        "0.78.0/bio/tabix"   
+        "v1.23.3/bio/tabix/index"   
 
 rule snpeff_download:
     output:

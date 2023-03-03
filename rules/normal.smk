@@ -11,7 +11,7 @@ rule norm_trim_reads_pe:
     threads:
         config["ncores"]    
     wrapper:
-        "0.78.0/bio/trimmomatic/pe"
+        "v1.23.3/bio/trimmomatic/pe"
         
 rule norm_map_reads:
     input:
@@ -29,7 +29,7 @@ rule norm_map_reads:
         sort_order="coordinate"
     threads: config["ncores"]
     wrapper:
-        "0.78.0/bio/bwa/mem"
+        "v1.23.3/bio/bwa/mem"
 
 rule norm_mark_duplicates:
     input:
@@ -44,39 +44,12 @@ rule norm_mark_duplicates:
     resources:
         mem_mb=4096
     wrapper:
-        "0.78.0/bio/picard/markduplicates"
-        
-rule norm_gatk_baserecalibrator:
-    input:
-        bam=normaldir + "dedup/{id}.bam",
-        ref=expand("resources/reference_genome/{ref}/{species}.fasta",ref=config["ref"]["build"],species=config["ref"]["species"]),
-        dict=expand("resources/reference_genome/{ref}/{species}.dict",ref=config["ref"]["build"],species=config["ref"]["species"]),
-        known=expand("resources/database/{ref}/variation.noiupac.vcf.gz",ref=config["ref"]["build"]),
-        tbi=expand("resources/database/{ref}/variation.noiupac.vcf.gz.tbi",ref=config["ref"]["build"])
-    output:
-        recal_table=normaldir + "recal/{id}.table"
-    log:
-        normaldir + "logs/gatk/bqsr/{id}.log"
-    wrapper:
-        "0.78.0/bio/gatk/baserecalibrator"      
-
-rule norm_gatk_applybqsr:
-    input:
-        bam=normaldir + "dedup/{id}.bam",
-        ref=expand("resources/reference_genome/{ref}/{species}.fasta",ref=config["ref"]["build"],species=config["ref"]["species"]),
-        dict=expand("resources/reference_genome/{ref}/{species}.dict",ref=config["ref"]["build"],species=config["ref"]["species"]),
-        recal_table=normaldir + "recal/{id}.table"
-    output:
-        bam=temp(normaldir + "recal/{id}.bam")
-    log:
-        normaldir + "logs/gatk/gatk_applybqsr/{id}.log"
-    wrapper:
-        "0.78.0/bio/gatk/applybqsr"
+        "v1.23.3/bio/picard/markduplicates"
 
 rule norm_mutect2:
     input:
         ref=expand("resources/reference_genome/{ref}/{species}.fasta",ref=config["ref"]["build"],species=config["ref"]["species"]),
-        bam = normaldir + "recal/{id}.bam",
+        bam = normaldir + "dedup/{id}.bam",
         exac= config["database_url"]["GRCh38"]["germline"]["ExAC"] if config["ref"]["build"]=='GRCh38' else config["database_url"]["GRCh37"]["germline"]["ExAC"],
         pon= config["database_url"]["GRCh38"]["germline"]["PON"] if config["ref"]["build"]=='GRCh38' else config["database_url"]["GRCh37"]["germline"]["PON"]
     output:
