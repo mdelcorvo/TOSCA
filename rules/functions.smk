@@ -11,6 +11,9 @@ def getpath(str):
 		str += '/'
 	return str
 
+def get_reference(wildcards):
+    return os.path.join('resources/reference_genome/',config["ref"]["build"], "homo_sapiens.fasta")
+
 ###########################
 
 def get_fastq(wildcards):

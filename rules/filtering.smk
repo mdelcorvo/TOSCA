@@ -28,7 +28,7 @@ rule snpsift_annotate_1000G:
     benchmark:
         outputdir + "benchmarks/1000G/{sample}.1000G.benchmark.txt"    
     wrapper:
-        "0.78.0/bio/snpsift/annotate"
+        "v1.23.3/bio/snpsift/annotate"
 
 rule snpsift_annotate_ESP:
     input:
@@ -42,7 +42,7 @@ rule snpsift_annotate_ESP:
     benchmark:
         outputdir + "benchmarks/ESP/{sample}.ESP.benchmark.txt"     
     wrapper:
-        "0.78.0/bio/snpsift/annotate"
+        "v1.23.3/bio/snpsift/annotate"
 
 rule snpsift_annotate_ExAC:
     input:
@@ -55,12 +55,13 @@ rule snpsift_annotate_ExAC:
     benchmark:
         outputdir + "benchmarks/ExAC/{sample}.ExAC.benchmark.txt"    
     wrapper:
-        "0.78.0/bio/snpsift/annotate"
+        "v1.23.3/bio/snpsift/annotate"
 
 rule snpsift_annotate_dbSNP:
     input:
         call=outputdir + "variant/{sample}.filt.vcf",
-        database=expand("resources/database/{ref}/variation.noiupac.vcf.gz",ref=config["ref"]["build"])
+        database=expand("resources/database/{ref}/variation.vcf.gz",ref=config["ref"]["build"]),
+        tbi=expand("resources/database/{ref}/variation.vcf.gz.tbi",ref=config["ref"]["build"])
     output:
         call=outputdir + "annotation/{sample}.dbSNP.vcf"
     resources:
@@ -68,7 +69,7 @@ rule snpsift_annotate_dbSNP:
     benchmark:
         outputdir + "benchmarks/dbSNP/{sample}.dbSNP.benchmark.txt"     
     wrapper:
-        "0.78.0/bio/snpsift/annotate"
+        "v1.23.3/bio/snpsift/annotate"
 
 rule Cosmic_annotate:
     input:
@@ -96,12 +97,12 @@ rule snpsift_annotate_ClinVar:
     benchmark:
         outputdir + "benchmarks/ClinVar/{sample}.ClinVar.benchmark.txt"      
     wrapper:
-        "0.78.0/bio/snpsift/annotate"
+        "v1.23.3/bio/snpsift/annotate"
 
 rule vcf_coverage:
     input:
          call=outputdir + "variant/{sample}.filt.vcf",
-         bam=outputdir + "recal/{sample}.bam"
+         bam=outputdir + "dedup/{sample}.bam"
     params:
          config["bamstats"]     
     output:      

@@ -2,18 +2,13 @@
 
 rule download_database:
     output:
-        expand(["resources/database/{ref}/temp_ESP6500SI.vcf.tar.gz",
-        "resources/database/{ref}/1000G-phase_3.vcf.gz",
-        "resources/database/{ref}/ClinVar.vcf.gz",
-        "resources/database/{ref}/COSMIC.vcf.gz"],
-        ref=config["ref"]["build"])
+        multiext("{database_dir}", "temp_ESP6500SI.vcf.tar.gz", "1000G-phase_3.vcf.gz", "ClinVar.vcf.gz", "COSMIC.vcf.gz")
     params:
         build=config["ref"]["build"],
         Cosmic = config["database_url"]["GRCh38"]["somatic"]["Cosmic"] if config["ref"]["build"]=='GRCh38' else config["database_url"]["GRCh37"]["somatic"]["Cosmic"],
 	Gen1K = config["database_url"]["GRCh38"]["germline"]["1000G"] if config["ref"]["build"]=='GRCh38' else config["database_url"]["GRCh37"]["germline"]["1000G"],
 	ESP = config["database_url"]["GRCh38"]["germline"]["ESP"] if config["ref"]["build"]=='GRCh38' else config["database_url"]["GRCh37"]["germline"]["ESP"],
 	Clinvar = config["database_url"]["GRCh38"]["germline"]["ClinVar"] if config["ref"]["build"]=='GRCh38' else config["database_url"]["GRCh37"]["germline"]["ClinVar"]
-    cache: True
     shell:
         "curl -k -L  '{params.Cosmic}' > resources/database/{params.build}/COSMIC.vcf.gz; "
         "curl -k -L  '{params.Gen1K}' > resources/database/{params.build}/1000G-phase_3.vcf.gz; "
@@ -28,7 +23,6 @@ rule download_mapping:
         build=config["ref"]["build"],
       	mappability = config["mappability"]["GRCh38"] if config["ref"]["build"]=='GRCh38' else config["mappability"]["GRCh37"],
         kmer = config["kmer"]
-    cache: True
     run:
         if config["ref"]["build"]=='GRCh38': 
           shell("curl -L  '{params.mappability}_{params.kmer}.bw' > resources/database/{params.build}/raw_mappability_{params.kmer}.bw; ")
@@ -43,7 +37,6 @@ rule ESP6500SI:
         expand("resources/database/{ref}/ESP6500SI.vcf.gz",ref=config["ref"]["build"])
     params:
         build=config["ref"]["build"]      
-    cache: True
     conda:
         "../envs/r4.yaml"
     shell:
@@ -60,9 +53,8 @@ rule tabix_Cosmic:
         expand("resources/database/{ref}/COSMIC.vcf.gz.tbi",ref=config["ref"]["build"])
     params:
         "-p vcf"
-    cache: True
     wrapper:
-        "0.78.0/bio/tabix" 
+        "v1.23.3/bio/tabix/index" 
 
 rule tabix_1000G:
     input:
@@ -71,9 +63,8 @@ rule tabix_1000G:
        expand("resources/database/{ref}/1000G-phase_3.vcf.gz.tbi",ref=config["ref"]["build"])
     params:
         "-p vcf"
-    cache: True
     wrapper:
-        "0.78.0/bio/tabix" 
+        "v1.23.3/bio/tabix/index" 
 
 rule tabix_ESP:
     input:
@@ -82,14 +73,13 @@ rule tabix_ESP:
          expand("resources/database/{ref}/ESP6500SI.vcf.gz.tbi",ref=config["ref"]["build"])
     params:
         "-p vcf"
-    cache: True
     wrapper:
-        "0.78.0/bio/tabix"     
+        "v1.23.3/bio/tabix/index"     
 
 rule edit_mappability:
     input:
         raw_map=expand("resources/database/{ref}/raw_mappability_{len}.bw",ref=config["ref"]["build"],len=config["kmer"]),
-        ref=expand("resources/reference_genome/{ref}/{species}.fasta",ref=config["ref"]["build"],species=config["ref"]["species"]),
+        ref=get_reference,
         script = "scripts/edit_mappability.R"
     output:
         raw_bed= temp(expand("resources/database/{ref}/raw_mappability_{len}.bed",ref=config["ref"]["build"],len=config["kmer"])),
